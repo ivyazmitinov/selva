@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{layout :: layout(~{::title}, ~{::script}, ~{::link}, ~{::#main})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Selva™ • Sign Up</title>
+    <script></script>
+    <link/>
+</head>
+<div id="main" class="flex flex-col items-center pt-36">
+    <div class="pb-4">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create an account
+        </h2>
+    </div>
+    <div class="w-96">
+        <form action="/auth/signup"
+              method="post"
+              class="p-8
+                 border
+                 border-gray-200
+                 rounded-lg
+                 shadow-lg
+                 inset-shadow-sm">
+            <div class="grid grid-cols-1 gap-2">
+                <label for="username">Username:</label>
+                <input type="text"
+                       id="username"
+                       name="username"
+                       required
+                       class="shadow-sm
+                   text-gray-900 border
+                   border-gray-300
+                   rounded-lg
+                   focus:ring-0
+                   focus:outline-none
+                   focus:ring-cyan-600
+                   focus:border-cyan-600
+                   p-1.5"/>
+                <label for="password">Password:</label>
+                <input type="password"
+                       required
+                       id="password"
+                       name="password"
+                       class="shadow-sm  text-gray-900 border border-gray-300 rounded-lg  focus:ring-0 focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 h-9 p-1.5"/>
+                <label for="repeat-password">Repeat password:</label>
+                <input type="password"
+                       required
+                       id="repeat-password"
+                       name="repeat-password"
+                       class="shadow-sm  text-gray-900 border border-gray-300 rounded-lg  focus:ring-0 focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 h-9 p-1.5"/>
+                <div>
+                    <th:block th:each="error : ${errors}">
+                        <div class="text-red-500 font-bold" th:text="${error.defaultMessage()}"></div>
+                    </th:block>
+                </div>
+                <input type="submit"
+                       value="Sign up"
+                       class="bg-sky-400
+                           text-white
+                           py-1.5
+                           px-2.5
+                           h-9
+                           mt-2
+                           rounded
+                           hover:bg-sky-600
+                           focus:outline-none
+                           focus:shadow-outline
+                           cursor-pointer
+                           w-full">
+            </div>
+        </form>
+    </div>
+</div>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{layout :: layout(~{::title}, ~{::script}, ~{::link}, ~{::#main})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Selva™ • Login</title>
+    <script></script>
+    <link/>
+</head>
+<div id="main" class="flex flex-col items-center pt-36">
+    <div class="pb-4">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign in to your account
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600 max-w">
+            Or
+            <a href="/auth/signup" class="font-medium text-blue-600 hover:text-blue-500">
+                create an account
+            </a>
+        </p>
+    </div>
+    <div class="w-96">
+        <form action="/auth/login"
+              method="post"
+              class="p-8
+                 border
+                 border-gray-200
+                 rounded-lg
+                 shadow-lg
+                 inset-shadow-sm">
+            <div class="grid grid-cols-1 gap-2">
+                <label for="username">Username:</label>
+                <input type="text"
+                       id="username"
+                       name="username"
+                       required
+                       class="shadow-sm
+                   text-gray-900 border
+                   border-gray-300
+                   rounded-lg
+                   focus:ring-0
+                   focus:outline-none
+                   focus:ring-cyan-600
+                   focus:border-cyan-600
+                   h-9
+                   p-1.5"/>
+                <label for="password">Password:</label>
+                <input type="password"
+                       required
+                       id="password"
+                       name="password"
+                       class="shadow-sm
+                   text-gray-900
+                   border
+                   border-gray-300
+                   rounded-lg
+                   focus:ring-0
+                   focus:outline-none
+                   focus:ring-cyan-600
+                   focus:border-cyan-600
+                   h-9
+                   p-1.5"/>
+                <div>
+                    <th:block th:each="error : ${errors}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke-width="1.5" stroke="currentColor" class="size-6 stroke-red-500 inline">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                        <p class="text-red-500 font-bold inline" th:text="${error.defaultMessage()}"></p>
+                    </th:block>
+                    <th:block th:if="${successfulRegistration}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke-width="1.5" stroke="currentColor" class="size-6 stroke-green-400 inline">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                        <p class="text-green-400 font-bold inline">Registration is successful</p>
+                    </th:block>
+                </div>
+                <input type="submit"
+                       value="Login"
+                       class="bg-sky-400
+                           text-white
+                           py-1.5
+                           px-2.5
+                           mt-2
+                           rounded
+                           hover:bg-sky-600
+                           focus:outline-none
+                           focus:shadow-outline
+                           cursor-pointer
+                           w-full">
+            </div>
+        </form>
+    </div>
+</div>
+</html>

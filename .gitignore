@@ -1,0 +1,6 @@
+# Project exclude paths
+/.gradle/
+/build/
+/selva/build/
+/selva/build/classes/java/main/
+/selva/build/classes/java/test/

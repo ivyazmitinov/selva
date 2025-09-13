@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{layout :: layout(~{::title}, ~{::script}, ~{::link}, ~{::#main})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Selva™ • Home</title>
+    <script></script>
+    <link/>
+</head>
+<div id="main" class="px-20">
+    <div  class="
+    py-20
+    flex
+    flex-wrap
+    gap-5">
+        <th:block th:each="integrationOverview: ${integrations}">
+            <div class="border border-gray-200 rounded-lg w-45 p-3 flex flex-col relative group justify-center shadow-lg inset-shadow-sm">
+                <img th:if="${integrationOverview.integration().logo() != null}"
+                     th:src="|data:${integrationOverview.integration().logo().format()};base64,${logos[integrationOverview.integration().id()]}|"
+                     th:alt="|${integrationOverview.integration().name()} Logo|"
+                     class="size-40">
+                <div class="flex items-center justify-center"
+                     th:if="${integrationOverview.integration().logo() == null}">
+                    <!-- https://www.flaticon.com/authors/yaicon -->
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="0.5"
+                         stroke="currentColor"
+                         class="stroke-sky-400">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/>
+                    </svg>
+                </div>
+                <h1 th:text="${integrationOverview.integration().name()}"
+                    class="text-4xl text-center font-[Oswald] text-gray-900 wrap-anywhere"></h1>
+                <div class="absolute
+            inset-0
+            bg-sky-200
+            opacity-0
+            group-hover:opacity-80
+            transition-opacity
+            duration-300
+            flex
+            items-center
+            justify-center
+            ">
+                </div>
+                <th:block th:if="${security['attributes']['userRole'] == 'USER'}">
+                    <form action="/app/external-profile/create-initial"
+                          method="post"
+                          class="block"
+                          th:if="${integrationOverview.externalProfileId() == null}">
+                        <input type="hidden" name="integrationId" th:value="${integrationOverview.integration().id()}">
+                        <input type="submit"
+                               value="Create"
+                               class="text-white
+                text-center
+                h-fit
+                py-1.5
+                px-2.5
+                w-32
+                rounded
+                group-hover:opacity-100
+                opacity-0
+                transition-opacity
+                duration-300
+                absolute
+                inset-0
+                m-auto
+                bg-sky-800
+                hover:bg-sky-900
+                focus:outline-none
+                focus:shadow-outline
+                cursor-pointer"
+                        >
+                    </form>
+                    <a th:if="${integrationOverview.externalProfileId() != null}"
+                       th:href="|/app/external-profile/${integrationOverview.externalProfileId()}|"
+                       class="     text-white
+                text-center
+                h-fit
+                py-1.5
+                px-2.5
+                w-32
+                rounded
+                group-hover:opacity-100
+                opacity-0
+                transition-opacity
+                duration-300
+                absolute
+                inset-0
+                m-auto
+                bg-sky-800
+                hover:bg-sky-900
+                focus:outline-none
+                focus:shadow-outline
+                cursor-pointer">
+                        Edit
+                    </a>
+                </th:block>
+                <th:block th:if="${security['attributes']['userRole'] == 'ADMIN'}">
+                    <a th:href="|/app/external-integration/${integrationOverview.integration().id()}|"
+                       class="     text-white
+                text-center
+                h-fit
+                py-1.5
+                px-2.5
+                w-32
+                rounded
+                group-hover:opacity-100
+                opacity-0
+                transition-opacity
+                duration-300
+                absolute
+                inset-0
+                m-auto
+                bg-sky-800
+                hover:bg-sky-900
+                focus:outline-none
+                focus:shadow-outline
+                cursor-pointer">
+                        Edit
+                    </a>
+                </th:block>
+            </div>
+        </th:block>
+        <div class="border border-gray-200 rounded-lg w-45 p-3 flex flex-col relative group justify-center shadow-lg inset-shadow-sm"
+             th:if="${security['attributes']['userRole'] == 'ADMIN'}">
+            <div class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="1"
+                     class="size-40 stroke-sky-400 border-4 border-sky-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+            </div>
+            <div class="absolute
+            inset-0
+            bg-sky-200
+            opacity-0
+            group-hover:opacity-80
+            transition-opacity
+            duration-300
+            flex
+            items-center
+            justify-center
+            ">
+            </div>
+            <a href="/app/external-integration/new"
+               class="     text-white
+                text-center
+                h-fit
+                py-1.5
+                px-2.5
+                w-32
+                rounded
+                group-hover:opacity-100
+                opacity-0
+                transition-opacity
+                duration-300
+                absolute
+                inset-0
+                m-auto
+                bg-sky-800
+                hover:bg-sky-900
+                focus:outline-none
+                focus:shadow-outline
+                cursor-pointer">
+                Add new
+            </a>
+        </div>
+    </div>
+</div>
+</html>

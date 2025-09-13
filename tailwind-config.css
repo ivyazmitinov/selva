@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: Racing Sans One;
+    src: url("/assets/fonts/racing-sans-one.ttf") format("truetype");
+}
+
+@theme {
+    --font-racing: "Racing Sans One", sans-serif;
+}

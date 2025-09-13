@@ -1,0 +1,38 @@
+micronaut.application.name = 'selva'
+micronaut.server.multipart.max-file-size = '50mb'
+
+[flyway.datasources.default]
+schemas = 'selva_migrations,selva'
+enabled = true
+
+[micronaut.session.http]
+cookie-secure = true
+cookie-same-site = 'Strict'
+
+[micronaut.security]
+intercept-url-map = [{ access = 'isAnonymous()', pattern = '/swagger/**' },
+    { access = 'isAnonymous()', pattern = '/swagger-ui/**' },
+    { access = 'isAnonymous()', pattern = '/swagger/**' },
+    { access = 'isAnonymous()', pattern = '/openapi-explorer/**' },
+    { access = 'isAnonymous()', pattern = '/assets/**' },
+]
+authentication = 'session'
+endpoints.login.path = '/auth/login'
+endpoints.logout.path = '/auth/logout'
+redirect.login-failure = '/auth/login?failure=true'
+
+[micronaut.router.static-resources.swagger]
+paths = 'classpath:META-INF/swagger'
+mapping = '/swagger/**'
+
+[micronaut.router.static-resources.swagger-ui]
+paths = 'classpath:META-INF/swagger/views/swagger-ui'
+mapping = '/swagger-ui/**'
+
+[micronaut.router.static-resources.openapi-explorer]
+paths = 'classpath:META-INF/swagger/views/openapi-explorer'
+mapping = '/openapi-explorer/**'
+
+[micronaut.router.static-resources.assets]
+paths = 'classpath:assets'
+mapping= '/assets/**'

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{layout :: layout(~{::title}, ~{::script}, ~{::link}, ~{::#main})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="|Selva™ • ${externalIntegration.name()}|"></title>
+    <script src="/assets/js/external-profile.js"></script>
+    <link/>
+</head>
+<div id="main" class="flex flex-col items-center size-auto py-20">
+    <div class="border border-gray-200 rounded-lg w-[25%] shadow-lg inset-shadow-sm p-2">
+        <form th:action="|/app/external-profile/${externalProfile.id()}|"
+              method="post"
+              id="external-profile-form"
+              enctype="multipart/form-data">
+            <div class="m-5">
+                <div class="flex gap-3 align-bottom pb-1">
+                    <img th:if="${externalIntegration.logo() != null}"
+                         th:src="|data:${externalIntegration.logo().format()};base64,${integrationLogo}|"
+                         th:alt="|${externalIntegration.name()} Logo|"
+                         class="size-8 inline">
+                    <h1 class="text-4xl font-bold font-[Oswald] text-gray-900 inline"
+                        th:text="${externalIntegration.name()}"></h1>
+                </div>
+                <p class="text-sm" th:text="|Fill the necessary info for your ${externalIntegration.name()} profile.
+            You may input the actual value, or link a field from the base profile using the 🔗 control!|"></p>
+            </div>
+            <div class="flex justify-center-safe">
+                <div class="h-px shrink-0 flex-none bg-cyan-700 w-[90%]">
+
+                </div>
+            </div>
+            <div class="m-5" title="Check this to allow other integrations to discover this profile">
+                <input type="checkbox"
+                       name="is-public"
+                       id="is-public"
+                       th:attr="data-testid=|is-public|"
+                       class="mr-1 my-auto size-4 cursor-pointer"
+                       th:checked="${externalProfile.isPublic()}">
+                <label for="is-public">Visible for other platforms</label>
+            </div>
+            <div class="flex justify-center-safe">
+                <div class="h-px shrink-0 flex-none bg-cyan-700 w-[90%]">
+
+                </div>
+            </div>
+            <fieldset class="m-5">
+                <div class="pb-5">
+                    <th:block th:each="field : ${externalProfileFields}">
+                        <div class="flex mb-2 fields-container">
+                            <div class="flex flex-col gap-2 w-full">
+                                <label type="text"
+                                       th:for="${field.getKey()}"
+                                       th:text="|${field.getValue().name()}:|"></label>
+                                <div class="flex gap-2">
+                                    <th:block
+                                            th:with="isRaw=${field.getValue().value() == null || field.getValue().value().class.name == 'org.ivanvyazmitinov.selva.model.UserFieldRawValue'},
+                                                 isReference=${field.getValue().value() != null && field.getValue().value().class.name == 'org.ivanvyazmitinov.selva.model.UserFieldBaseProfileValueReference'}">
+                                        <input th:type="${field.getValue().type().toString()}"
+                                               th:attr="data-testid=|field-${field.getValue().order()}-value|"
+                                               th:name="${field.getKey()}"
+                                               th:value="${isRaw}? (${field.getValue().value() != null}? ${field.getValue().value().value()} : null)"
+                                               th:id="${field.getKey()}"
+                                               th:disabled="${!isRaw}"
+                                               th:classappend="${isRaw ? '' : 'hidden'}"
+                                               th:required="${field.getValue().type().toString() != 'FILE'}"
+                                               placeholder="Enter field value here..."
+                                               th:class="${field.getValue().type().toString() == 'FILE'}
+                                           ? 'text-slate-500 font-medium text-sm bg-gray-100 cursor-pointer file:cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-cyan-800 file:hover:bg-cyan-700 file:text-white w-full rounded-lg'
+                                           : 'shadow-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-0 focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 p-1.5 h-9 w-full'"
+                                               class=""
+                                               autocomplete="on"/>
+                                        <select th:name="|${field.getKey()}__reference|"
+                                                th:id="|${field.getKey()}__reference|"
+                                                th:attr="data-testid=|field-${field.getValue().order()}-reference|"
+                                                th:disabled="${!isReference}"
+                                                th:classappend="${isReference ? '' : 'hidden'}"
+                                                required
+                                                class="shadow-sm
+                                                border
+                                                border-gray-300
+                                                rounded-lg
+                                                p-1.5
+                                                h-9
+                                                w-full
+                                                text-gray-700
+                                                focus:border-cyan-600
+                                                focus:ring-0
+                                                focus:outline-0
+                                                cursor-pointer">
+                                            <option disabled selected value> -- Select a field to link --</option>
+                                            <th:block th:each="baseProfileField : ${baseProfileFields}">
+                                                <option th:if="${baseProfileField.value.value() != null && field.value.type() == baseProfileField.value.type()}"
+                                                        th:selected="${isReference}? ${field.value.value().fieldId() == baseProfileField.key}"
+                                                        th:value="${baseProfileField.key}"
+                                                        th:text="|🔗 to &quot;${baseProfileField.value.name()}&quot; (${baseProfileField.value.value().value()})|"></option>
+                                            </th:block>
+                                        </select>
+                                        <div th:id="|${field.getKey()}__switch_to_reference|"
+                                             th:attr="data-testid=|field-${field.getValue().order()}-switch-to-reference|"
+                                             title="Link a base profile field"
+                                             class="flex flex-col justify-center items-center"
+                                             th:classappend="${isRaw ? '' : 'hidden'}">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke-width="1.5"
+                                                 stroke="currentColor"
+                                                 tabindex="0"
+                                                 th:attr="onclick=|toggleFieldInput('${field.getKey()}')|"
+                                                 class="size-5
+                                              mx-auto
+                                             stroke-sky-400
+                                             hover:stroke-sky-500
+                                             focus:stroke-sky-500
+                                             focus:outline-0
+                                             select-none
+                                             cursor-pointer">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/>
+                                            </svg>
+                                        </div>
+                                        <div th:id="|${field.getKey()}__switch_to_raw|"
+                                             th:attr="data-testid=|field-${field.getValue().order()}-switch-to-raw|"
+                                             title="Unlink a base profile field"
+                                             class="flex flex-col justify-center items-center"
+                                             th:classappend="${isReference ? '' : 'hidden'}">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke-width="1.5"
+                                                 stroke="currentColor"
+                                                 tabindex="0"
+                                                 th:attr="onclick=|toggleFieldInput('${field.getKey()}')|"
+                                                 class="size-5
+                                              mx-auto
+                                             stroke-sky-400
+                                             hover:stroke-sky-500
+                                             focus:stroke-sky-500
+                                             focus:outline-0
+                                             select-none
+                                             cursor-pointer">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M13.181 8.68a4.503 4.503 0 0 1 1.903 6.405m-9.768-2.782L3.56 14.06a4.5 4.5 0 0 0 6.364 6.365l3.129-3.129m5.614-5.615 1.757-1.757a4.5 4.5 0 0 0-6.364-6.365l-4.5 4.5c-.258.26-.479.541-.661.84m1.903 6.405a4.495 4.495 0 0 1-1.242-.88 4.483 4.483 0 0 1-1.062-1.683m6.587 2.345 5.907 5.907m-5.907-5.907L8.898 8.898M2.991 2.99 8.898 8.9"/>
+                                            </svg>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </fieldset>
+        </form>
+        <form th:action="|/app/external-profile/${externalProfile.id()}/delete|"
+              method="post"
+              id="delete-external-profile-form">
+        </form>
+        <div class="flex justify-center gap-2 w-full">
+            <input type="submit"
+                   id="submit-external-profile-form"
+                   form="external-profile-form"
+                   value="Submit"
+                   class="bg-sky-400
+                       text-white
+                       py-1.5
+                       px-2.5
+                       rounded
+                       hover:bg-sky-600
+                       focus:outline-none
+                       focus:shadow-outline
+                       cursor-pointer
+                       w-1/3"/>
+            <input type="submit"
+                   id="submit-delete-external-profile-form"
+                   value="Delete"
+                   class="bg-red-500
+                       text-white
+                       py-1.5
+                       px-2.5
+                       rounded
+                       hover:bg-red-700
+                       focus:outline-none
+                       focus:shadow-outline
+                       cursor-pointer
+                       w-1/3"/>
+        </div>
+    </div>
+</div>
+</html>

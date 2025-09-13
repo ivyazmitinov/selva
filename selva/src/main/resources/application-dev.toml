@@ -1,0 +1,11 @@
+[datasources.default]
+url = 'jdbc:postgresql://localhost:5432/postgres'
+username = 'selva_service'
+password = 'selva'
+driver-class-name = 'org.postgresql.Driver'
+
+[logger.levels]
+org.ivanvyazmitinov = 'DEBUG'
+
+[app]
+base-url = 'http://127.0.0.1:8080'

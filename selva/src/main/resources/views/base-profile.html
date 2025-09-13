@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{layout :: layout(~{::title}, ~{::script}, ~{::link}, ~{::#main})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Selva™ • Account</title>
+    <script src="/assets/js/base-profile.js"></script>
+    <link/>
+</head>
+<div id="main" class="flex flex-col items-center size-auto py-20">
+    <div class="border border-gray-200 rounded-lg w-[50%] shadow-lg inset-shadow-sm pb-5">
+        <form th:action="|/app/base-profile/${baseProfileId}|"
+              id="base-profile-form"
+              method="post"
+              enctype="multipart/form-data">
+            <div class="mx-16 my-5">
+                <h1 class="text-4xl font-bold font-[Oswald] text-gray-900 mb-5">Let's get to know each other 👋</h1>
+                <p class="text-sm">Share all information you feel necessary.
+                    You will be able to link to it later</p>
+            </div>
+            <div class="flex justify-center-safe">
+                <div class="h-px shrink-0 flex-none bg-cyan-700 w-[90%]">
+
+                </div>
+            </div>
+            <fieldset id="base-profile-fields" class="m-5">
+                <div id="editable-fields">
+                    <th:block th:each="field : ${userFields}">
+                        <div class="flex mb-2 fields-container transition-opacity duration-200 ease-in opacity-100"
+                             th:id="|${field.getKey()}-container|">
+                            <div class="mr-2"
+                                 title="Remove a field">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     th:id="|${field.getKey()}-remove-button|"
+                                     th:attr="onclick=|removeFields('${field.getKey()}')|,data-testid=|new-field-${field.getValue().order()}-remove-button|"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke-width="1"
+                                     tabindex="0"
+                                     class="
+                                      size-10
+                                      stroke-sky-400
+                                      transition-all
+                                      transform
+                                      duration-400
+                                      hover:rotate-180
+                                      focus:rotate-180
+                                      select-none
+                                      hover:stroke-red-600
+                                      focus:stroke-red-600
+                                      focus:outline-0
+                                      cursor-pointer">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 w-full">
+                                <input readonly
+                                       disabled
+                                       type="text"
+                                       th:attr="data-testid=|new-field-${field.getValue().order()}-label|"
+                                       th:id="|${field.getKey()}-label|"
+                                       th:name="|${field.getKey()}__label|"
+                                       th:value="|${field.getValue().name()}:|"
+                                       class="shadow-sm bg-gray-300 border border-gray-300 text-gray-900 sm:text-sm rounded-lg h-9 p-1.5">
+                                <input th:type="${field.getValue().type().toString()}"
+                                       th:name="|${field.getKey()}__value|"
+                                       th:value="${field.getValue().value() != null}? ${field.getValue().value().value()} : null"
+                                       th:id="${field.getKey()}"
+                                       th:attr="data-testid=|new-field-${field.getValue().order()}-value|"
+                                       th:required="${field.getValue().type().toString() != 'FILE'}"
+                                       placeholder="Enter field value here..."
+                                       th:class="${field.getValue().type().toString() == 'FILE'}
+                                           ? 'text-slate-500 font-medium text-sm bg-gray-100 cursor-pointer file:cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4 file:bg-cyan-800 file:hover:bg-cyan-700 file:text-white w-full rounded-lg'
+                                           : 'shadow-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-0 focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 p-1.5 h-9 w-full'"
+                                       class=""
+                                       autocomplete="on"/>
+                                <input hidden
+                                       th:id="|${field.getKey()}-order|"
+                                       th:attr="data-testid=|new-field-${field.getValue().order()}-order|"
+                                       th:name="|${field.getKey()}__order|"
+                                       th:value="${field.getValue().order()}">
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+                <div class="flex justify-start">
+                    <div title="Add new field">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="1"
+                             tabindex="0"
+                             class="size-10
+                          stroke-sky-400
+                          transition-all
+                          transform
+                          duration-400
+                          hover:rotate-90
+                          focus:rotate-90
+                          hover:stroke-green-400
+                          focus:stroke-green-400
+                          focus:outline-0
+                          select-none
+                          cursor-pointer"
+                             id="add-new-field">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <form action="/app/account" method="post" id="delete-account-form">
+
+        </form>
+        <div class="flex justify-center gap-2">
+            <input type="submit"
+                   form="base-profile-form"
+                   id="submit-base-profile-form"
+                   th:value="${registrationFinished} ? 'Submit' : 'Let\'s go!'"
+                   class="bg-sky-400
+                           text-white
+                           py-1.5
+                           px-2.5
+                           rounded
+                           hover:bg-sky-600
+                           focus:outline-none
+                           focus:shadow-outline
+                           cursor-pointer
+                           w-1/5"/>
+            <input type="submit"
+                   id="delete-account-form-submit"
+                   th:if="${registrationFinished}"
+                   value="Delete account"
+                   class="bg-red-500
+                           text-white
+                           py-1.5
+                           px-2.5
+                           rounded
+                           hover:bg-red-700
+                           focus:outline-none
+                           focus:shadow-outline
+                           cursor-pointer
+                           w-1/5"/>
+        </div>
+    </div>
+</div>
+</html>

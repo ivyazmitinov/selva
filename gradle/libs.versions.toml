@@ -1,0 +1,20 @@
+[versions]
+micronaut="4.8.2"
+
+[libraries]
+testcontainers-junit.module = "org.testcontainers:junit-jupiter"
+flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version = "11.0.0" }
+spring-security-crypto = "org.springframework.security:spring-security-crypto:6.5.1"
+jooq = "org.jooq:jooq:3.20.4"
+jcl = "org.slf4j:jcl-over-slf4j:2.0.17"
+tika = "org.apache.tika:tika-core:3.2.1"
+guava = "com.google.guava:guava:33.4.8-jre"
+playwrite = "com.microsoft.playwright:playwright:1.54.0"
+
+[plugins]
+micronaut-minimal-application = "io.micronaut.minimal.application:4.5.3"
+micronaut-docker = "io.micronaut.docker:4.5.3"
+micronaut-testresources = "io.micronaut.test-resources:4.5.3"
+shadow = "com.gradleup.shadow:8.3.6"
+flyway = "org.flywaydb.flyway:11.9.1"
+jooq = "org.jooq.jooq-codegen-gradle:3.20.4"

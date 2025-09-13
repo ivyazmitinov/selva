@@ -1,0 +1,16 @@
+micronaut.server.port = 18080
+
+[test-resources.containers.postgres]
+image-name = 'selva_postgres:17.5'
+db-name = 'postgres'
+
+[datasources.default]
+username = 'selva_service'
+password = 'selva'
+db-type = 'postgres'
+
+[logger.levels]
+org.ivanvyazmitinov = 'DEBUG'
+
+[app]
+base-url = 'http://127.0.0.1:18080'
