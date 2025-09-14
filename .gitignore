@@ -18,6 +18,7 @@ syntax: glob
 build
 gradle-build
 logback-test.xml
+*.micronaut
 
 analytics-web/**.css
 analytics-web/src/**.css

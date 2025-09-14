@@ -25,6 +25,7 @@ docker build docker/ -t selva_postgres:17.5
 - Execute tests with `./gradlew test`. If necessary, tweak the [PlaywrightBrowserLauncher.java](selva/src/test/java/org/ivanvyazmitinov/PlaywrightBrowserLauncher.java), disabling headless mode, for example
 - Start postgres in docker via `docker compose down && docker compose up -d`
 - Run application via `./gradlew run`. The application will be available at http://localhost:8080
+- Default admin credentials are `admin/admin`
 
 # Development
 
